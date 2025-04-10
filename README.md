@@ -2,7 +2,7 @@
 
 This project is a part of the **CareExpand** application, focusing on managing appointments. It provides a user-friendly interface to view, search, and manage appointments in both card and list views.
 
-To showcase the error handling, randomly some API requests will fail.
+To showcase the error handling, randomly some API requests will fail. To disadble errors set **ERRORS_ENABLED** to false on **`api/appointments/route.ts`**
 
 ## Features
 
