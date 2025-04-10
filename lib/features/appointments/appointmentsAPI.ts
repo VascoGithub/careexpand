@@ -1,6 +1,7 @@
 import { Appointment } from "./appointmentsSlice";
 
 export const createAppointment = async (id: string, name: string, date: string, time: string, description: string) => {
+  
   try {
     const response = await fetch("http://localhost:3000/api/appointments", {
       method: "POST",
@@ -38,7 +39,7 @@ export const deleteAppointment = async (id: string) => {
 
     if (!response.ok) {
       const error = await response.json();
-     throw new Error(error.message);
+      throw new Error(error.message);
     }
 
     const result: { data: Appointment } = await response.json();
@@ -52,9 +53,9 @@ export const fetchAllAppointments = async () => {
 
   try {
     const response = await fetch("http://localhost:3000/api/appointments", {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
-  });
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    });
 
     if (!response.ok) {
       const error = await response.json();

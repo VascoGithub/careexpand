@@ -11,6 +11,8 @@ interface Appointment {
   description: string;
 }
 
+const ERRORS_ENABLED = false;
+
 export async function POST(request: NextRequest) {
   // name, date, time, description
   const body: { id: string, name: string, date: string, time: string, description: string } = await request.json();
@@ -27,9 +29,12 @@ export async function POST(request: NextRequest) {
     }
 
     //forced error
-    if (Math.random() < 1 / 3) {
-      throw new Error();
+    if (ERRORS_ENABLED) {
+      if (Math.random() < 1 / 3) {
+        throw new Error();
+      }
     }
+
 
     await writeAppointments(appointments);
     await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -51,8 +56,10 @@ export async function DELETE(request: NextRequest) {
     const appointmentIndex = appointments.findIndex((appointment) => appointment.id === id);
 
     //forced error
-    if (Math.random() < 1 / 3) {
-      throw new Error();
+    if (ERRORS_ENABLED) {
+      if (Math.random() < 1 / 3) {
+        throw new Error();
+      }
     }
 
     if (appointmentIndex === -1) {

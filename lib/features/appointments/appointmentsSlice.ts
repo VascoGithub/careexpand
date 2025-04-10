@@ -106,7 +106,7 @@ export const appointmentSlice = createAppSlice({
   },
 });
 
-export const {createAppointmentAsync, fetchAllAppointmentsAsync, deleteAppointmentAsync, fetchAllAppointmentsMatchingNameAsync} =
+export const {createAppointmentAsync, fetchAllAppointmentsAsync, deleteAppointmentAsync, fetchAllAppointmentsMatchingNameAsync } =
   appointmentSlice.actions;
 
 export const {selectStatus, selectAppointments } = appointmentSlice.selectors;

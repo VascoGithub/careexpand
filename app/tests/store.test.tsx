@@ -13,12 +13,11 @@ test('should handle createAppointment', async () => {
 
     const store = makeStore();
     // Ensure the initial state is empty
+    //store.dispatch(deleteAllAppointmentAsync());
     expect(store.getState().appointments.list).toHaveLength(0);
 
-    console.log(store.getState());
-
     // Dispatch the real action
-    const action = store.dispatch(createAppointmentAsync({
+    await store.dispatch(createAppointmentAsync({
         id: mockAppointment.id,
         name: mockAppointment.name,
         date: mockAppointment.date,
@@ -26,11 +25,6 @@ test('should handle createAppointment', async () => {
         description: mockAppointment.description,
     }));
 
-    // Wait for the action to be fulfilled
-    const actionReturn = await action;
-    console.log(actionReturn)
-
-    console.log(store.getState());
 
     expect(store.getState().appointments.list).toHaveLength(1);
     expect(store.getState().appointments.list[0]).toEqual(mockAppointment);
@@ -43,13 +37,14 @@ test('should not modify state for unknown actions', async () => {
     // Dispatch an unknown action
     store.dispatch({ type: 'unknown/action', payload: {} });
 
-    // Verify the state remains unchanged
     const state = store.getState();
     expect(state).toEqual(initialState);
 });
 
 test('should handle multiple appointments creation', async () => {
     const store = makeStore();
+    //store.dispatch(deleteAllAppointmentAsync());
+
     const secondAppointment = {
         id: '2',
         name: 'Test Appointment 2',
@@ -68,6 +63,8 @@ test('should handle multiple appointments creation', async () => {
 
 test('should handle appointment creation with empty description', async () => {
     const store = makeStore();
+    //store.dispatch(deleteAllAppointmentAsync());
+
     const appointmentWithoutDescription = {
         id: '3',
         name: 'Test Appointment 3',
@@ -83,6 +80,8 @@ test('should handle appointment creation with empty description', async () => {
 
 test('should maintain appointment order after multiple creations', async () => {
     const store = makeStore();
+    //store.dispatch(deleteAllAppointmentAsync());
+
     const appointments = [
         mockAppointment,
         {
