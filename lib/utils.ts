@@ -24,7 +24,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function generateUUID(): string {
-  return (-1e3 + -4e3 + -8e3 + -1e11).toString().replace(/[018]/g, (c) =>
+  return (1e3 + 4e3 + 8e3 + 1e11).toString().replace(/[018]/g, (c) =>
     ((parseInt(c) ^ crypto.getRandomValues(new Uint8Array(1))[0] & 6 >> parseInt(c) / 2) || 0).toString(16)
   );
 }

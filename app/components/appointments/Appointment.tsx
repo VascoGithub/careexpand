@@ -6,13 +6,14 @@ import { useEffect, useState } from "react"
 import { Grid2X2, List } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useAppDispatch, useAppSelector } from "@/lib/hooks"
-import { selectAppointments, fetchAllAppointmentsAsync, Appointment } from "@/lib/features/appointments/appointmentsSlice"
+import { selectAppointments, fetchAllAppointmentsAsync, Appointment, createAppointmentAsync, deleteAppointmentAsync } from "@/lib/features/appointments/appointmentsSlice"
 import AppointmentForm from "./AppointmentForm"
 import AppointmentCard from "./AppointmentCard"
 import AppointmentFakeForm from "./AppointmentFakeForm"
 import AppointmentTable from "./AppointmentTable"
 import { useKeyboardShortcut } from "@/app/hooks/useKeyboardShortcut"
 import AppointmentSearch from "./AppointmentSearch"
+import socket from "@/app/hooks/sockets"
 
 export default function AppointmentUI() {
   const [view, setView] = useState<"card" | "list">("card")
@@ -25,7 +26,21 @@ export default function AppointmentUI() {
 
   useEffect(() => {
     dispatch(fetchAllAppointmentsAsync());
-    console.log("Fetching appointments...");
+  }, [dispatch]);
+
+  useEffect(() => {
+    socket.on("appointment:created", (appointment) => {
+      dispatch(createAppointmentAsync(appointment));
+    });
+  
+    socket.on("appointment:deleted", () => {
+      dispatch(fetchAllAppointmentsAsync());
+    });
+  
+    return () => {
+      socket.off("appointment:created");
+      socket.off("appointment:deleted");
+    };
   }, [dispatch]);
 
   return (

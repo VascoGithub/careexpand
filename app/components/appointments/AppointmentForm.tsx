@@ -13,6 +13,7 @@ import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { Appointment, createAppointmentAsync, selectStatus } from "@/lib/features/appointments/appointmentsSlice";
 import { toast } from 'sonner'
 import { unwrapResult } from "@reduxjs/toolkit";
+import socket from "@/app/hooks/sockets";
 
 // Define time options for the select dropdown
 const timeOptions = [
@@ -107,6 +108,8 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
             }));
     
             unwrapResult(resultAction);
+
+            socket.emit("appointment:created", resultAction.payload);
     
             toast.success(appointment ? "Appointment updated!" : "New appointment created!", {id: toastId});
             clearStates();

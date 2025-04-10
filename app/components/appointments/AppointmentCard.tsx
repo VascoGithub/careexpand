@@ -10,6 +10,7 @@ import { format } from "date-fns"
 import { useAppDispatch } from "@/lib/hooks";
 import { toast } from "sonner";
 import { unwrapResult } from "@reduxjs/toolkit";
+import socket from "@/app/hooks/sockets";
 
 interface AppointmentCardProps {
     setFormOpen: (open: boolean) => void;
@@ -30,6 +31,8 @@ const AppointmentCard = ({ appointmentsList, setFormOpen, setAppointment }: Appo
 
             unwrapResult(resultAction);
 
+            socket.emit("appointment:deleted");
+
             //@ts-expect-error payload.name exists! Use deleteAppointmentAsync.fulfilled.match(resultAction) to avoid using this/
             toast.success(resultAction.payload.name + " appointment deleted!", {id: toastId});
         } catch (error: any) {
@@ -44,7 +47,7 @@ const AppointmentCard = ({ appointmentsList, setFormOpen, setAppointment }: Appo
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {appointmentsList && appointmentsList.length > 0 && (
+            {appointmentsList && appointmentsList.length > 0 ? (
                 <>
                     {appointmentsList.map((appointment) => (
                         <ContextMenu key={appointment.id}>
@@ -82,6 +85,11 @@ const AppointmentCard = ({ appointmentsList, setFormOpen, setAppointment }: Appo
                         </ContextMenu>
                     ))}
                 </>
+            ) : (
+                <div className="flex flex-col items-center justify-center w-full col-span-full text-center">
+                    <h3 className="text-lg font-semibold">No appointments</h3>
+                    <p className="text-sm text-muted-foreground">There are no appointments scheduled.</p>
+                </div>
             )}
         </div>
 

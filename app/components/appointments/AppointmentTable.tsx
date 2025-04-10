@@ -8,6 +8,7 @@ import { useAppDispatch } from "@/lib/hooks";
 import { toast } from "sonner";
 import { Separator } from "@/components/ui/separator";
 import { unwrapResult } from "@reduxjs/toolkit";
+import socket from "@/app/hooks/sockets";
 
 interface AppointmentCardProps {
     setFormOpen: (open: boolean) => void;
@@ -22,15 +23,17 @@ const AppointmentTable = ({ appointmentsList, setFormOpen, setAppointment }: App
     const handleDelete = async (id: string) => {
 
         const toastId = toast.loading("Deleting appointment...");
-        
+
         try {
             const resultAction = await dispatch(deleteAppointmentAsync({ id }));
             unwrapResult(resultAction);
-            
+
+            socket.emit("appointment:deleted");
+
             //@ts-expect-error payload.name exists! Use deleteAppointmentAsync.fulfilled.match(resultAction) to avoid using this/
-            toast.success(resultAction.payload.name + " appointment deleted!", {id: toastId});
+            toast.success(resultAction.payload.name + " appointment deleted!", { id: toastId });
         } catch (error: any) {
-            toast.error(error.message, {id: toastId});
+            toast.error(error.message, { id: toastId });
         }
     }
 
@@ -40,19 +43,18 @@ const AppointmentTable = ({ appointmentsList, setFormOpen, setAppointment }: App
     }
 
     return (
-        <div className="rounded-md border">
-            <div className="bg-muted/50 p-4 sm:px-6">
-                <div className="grid grid-cols-12 text-sm font-medium text-muted-foreground">
-                    <div className="col-span-5 sm:col-span-4">Name</div>
-                    <div className="col-span-3 sm:col-span-2">Date</div>
-                    <div className="col-span-3 sm:col-span-2">Time</div>
-                    <div className="hidden sm:block sm:col-span-4">Description</div>
-                    <div className="col-span-1"></div>
-                </div>
-            </div>
-            <div>
-                {appointmentsList && appointmentsList.length > 0 && (
-                    <>
+        <>
+            {appointmentsList && appointmentsList.length > 0 ? (
+                    <div className="rounded-md border">
+                        <div className="bg-muted/50 p-4 sm:px-6">
+                            <div className="grid grid-cols-12 text-sm font-medium text-muted-foreground">
+                                <div className="col-span-5 sm:col-span-4">Name</div>
+                                <div className="col-span-3 sm:col-span-2">Date</div>
+                                <div className="col-span-3 sm:col-span-2">Time</div>
+                                <div className="hidden sm:block sm:col-span-4">Description</div>
+                                <div className="col-span-1"></div>
+                            </div>
+                        </div>
                         {appointmentsList.map((appointment, index) => (
                             <ContextMenu key={appointment.id}>
                                 <ContextMenuTrigger>
@@ -81,10 +83,14 @@ const AppointmentTable = ({ appointmentsList, setFormOpen, setAppointment }: App
                                 </ContextMenuContent>
                             </ContextMenu>
                         ))}
-                    </>
-                )}
-            </div>
-        </div>
+                    </div>
+            ) : (
+                <div className="flex flex-col items-center justify-center w-full col-span-full text-center">
+                    <h3 className="text-lg font-semibold">No appointments</h3>
+                    <p className="text-sm text-muted-foreground">There are no appointments scheduled.</p>
+                </div>
+            )}
+        </>
     );
 };
 

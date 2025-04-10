@@ -38,8 +38,7 @@ export const deleteAppointment = async (id: string) => {
 
     if (!response.ok) {
       const error = await response.json();
-      console.log("ERROR IS " + error.message)
-      throw new Error(error.message);
+     throw new Error(error.message);
     }
 
     const result: { data: Appointment } = await response.json();

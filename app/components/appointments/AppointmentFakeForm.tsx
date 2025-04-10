@@ -6,6 +6,7 @@ import { createAppointmentAsync, selectStatus } from "@/lib/features/appointment
 import { toast } from 'sonner'
 import { unwrapResult } from "@reduxjs/toolkit";
 import { useKeyboardShortcut } from "@/app/hooks/useKeyboardShortcut";
+import socket from "@/app/hooks/sockets";
 
 const AppointmentFakeForm = () => {
     const dispatch = useAppDispatch();
@@ -29,6 +30,8 @@ const AppointmentFakeForm = () => {
             }));
 
             unwrapResult(resultAction);
+
+            socket.emit("appointment:created", resultAction.payload);
 
             toast.success("New random appointment created!", { id: toastId });
         } catch (error: any) {

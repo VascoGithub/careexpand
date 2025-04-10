@@ -12,6 +12,7 @@ To showcase the error handling, randomly some API requests will fail.
 - **Keyboard Shortcut**: Use `Meta + J` to toggle the appointment form.
 - **Keyboard Shortcut**: Use `Meta + R` to create a random appointment.
 - **Responsive Design**: Optimized for both desktop and mobile devices. (Although not React Native)
+- **Sockets Support**: Having multiple windows open will be synced between each other.
 
 ## File Structure
 
@@ -23,6 +24,7 @@ To showcase the error handling, randomly some API requests will fail.
 - **`appointments/AppointmentFakeForm.tsx`**: Button to create fake appointments for demonstration purposes.
 ---
 - **`hooks/useKeyboardShortcut.tsx`**: Hook to manage button presses.
+- **`hooks/socket.tsx`**: Socket client interface. 
 ---
 - **`lib/appointments/appointmentsAPI.ts`**: Functions to make the API calls
 - **`lib/appointments/appointmentsSlice.ts`**: Redux slice where the appointment reduces/stores/selectors are defined
@@ -51,7 +53,13 @@ To showcase the error handling, randomly some API requests will fail.
    bun run dev
    ```
 
-4. Open the app in your browser at `http://localhost:3000`.
+4. Start the socket development server:
+   ```bash
+   cd server
+   bun server.js
+   ```
+
+5. Open the app in your browser at `http://localhost:3000`.
 
 ## Usage
 
